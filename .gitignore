@@ -1,0 +1,8 @@
+# virtual environment
+env/
+
+# python's ignore data
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env

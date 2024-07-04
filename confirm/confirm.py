@@ -13,18 +13,22 @@ def calculate_total_profit(history):
 	loss = 0
 	tmp = 0
 	lens = []
-	for i in range in length:
+	profits = []
+	for i in range(1000000):
 		if history[i] < 10:
 			tmp += 1
-			if tmp > 5 : 
+			if tmp > 9: 
 				loss += 1
 		else:
-			if tmp > 5:
-				profit = 10 - (loss + 1)
+			if tmp > 9:
+				profit = 10 - loss
 				total_profit += profit
 				lens.append(tmp)
+				profits.append(profit)
 			tmp = 0
+			loss = 0
 	print(lens)
+	print(profits)
 	print("Total profit: ", total_profit)
 	return 0
 

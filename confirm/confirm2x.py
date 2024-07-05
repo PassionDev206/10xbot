@@ -10,19 +10,31 @@ def load_history_from_path(pat):
 def get_max_length_without_2x(history):
 	lens = []
 	tmp = 0
+	max_len = 0
+	large_lens = []
 	for i in range(1000000):
 		if history[i] >= 2:
 			lens.append(tmp)
+			if tmp > 9:
+				large_lens.append(tmp)
+				if tmp > max_len:
+					max_len = tmp
 			tmp = 0
 		else:
 			tmp += 1
-
-	print(lens) 
-	with open("lens.json", "w") as file:
+	
+	with open("result_2x/lens.json", "w") as file:
 		json.dump(lens, file, indent=2)
-	print("Profits: ", len(lens))
-	lens = np.array(lens)
-	print("Max: ", np.max(lens))
+	
+	large_cnt = len(large_lens)
+	total_profit = len(lens)
+	result = {
+		"Large number: ": f"{large_cnt}",
+		"Max count: ": f"{max_len}",
+		"Total profit: ": f"{total_profit}"
+	}
+	with open("result_2x/result.json", "w") as file:
+		json.dump(result, file, indent=2)
 	return 0
 
 if __name__ == "__main__":

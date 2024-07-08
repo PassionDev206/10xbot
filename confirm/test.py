@@ -1,6 +1,7 @@
 import json
 
-if __name__ == "__main__":
+# test to get the profit in specific crash value
+def test_getting_profit():
 	with open("history.json") as file:
 		history = json.load(file)
 	profit_cnt = 0
@@ -43,3 +44,26 @@ if __name__ == "__main__":
 	print("Profit count:", profit_cnt)
 	# total_profit = profit_range * profit_cnt - loss_cnt
 	print("Total profit: ", total_profit)
+
+# test the risk management in 2x strategy
+def test_risk_2x():
+	path = "history.json"
+	with open(path, "r") as file:
+		data = json.load(file)
+	temp = 0
+	lens = []
+	for i in range(len(data)):
+		if data[i] < 2:
+			temp += 1
+		else:
+			lens.append(temp)
+			temp = 0
+	print(lens)
+
+if __name__ == "__main__":
+	test_method = input("Input the test method:")
+	test_method = int(test_method)
+	if test_method == 0:
+		test_getting_profit()
+	elif test_method == 1:
+		test_risk_2x()

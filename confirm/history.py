@@ -29,7 +29,7 @@ def get_crash_history(hash, salt, index, len):
 		hash = get_previous_hash(hash)
 
 	data.reverse()
-	file = f"history.json"
+	file = f"history100k.json"
 	with open(file, "w") as file:
 		file.write(json.dumps(data, indent=2))
 	file.close()
@@ -43,6 +43,6 @@ if __name__ == "__main__":
 	salt = "0000000000000000000301e2801a9a9598bfb114e574a91a887f2132f33047e6"
 	gameId = 7182537
 
-	get_crash_history(hash, salt, gameId, 1000000)
+	get_crash_history(hash, salt, gameId, 100000)
 
 

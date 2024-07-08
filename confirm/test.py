@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 # test to get the profit in specific crash value
 def test_getting_profit():
@@ -45,20 +46,43 @@ def test_getting_profit():
 	# total_profit = profit_range * profit_cnt - loss_cnt
 	print("Total profit: ", total_profit)
 
-# test the risk management in 2x strategy
-def test_risk_2x():
-	path = "history.json"
-	with open(path, "r") as file:
-		data = json.load(file)
-	temp = 0
+# get the array of the length how many times appear greater than 2x or less than 2x
+def get_length_list(data):
 	lens = []
+	temp = 0
 	for i in range(len(data)):
 		if data[i] < 2:
 			temp += 1
 		else:
 			lens.append(temp)
 			temp = 0
-	print(lens)
+	return lens
+
+# test the risk management in 2x strategy
+def test_risk_2x():
+	path = "history.json"
+	with open(path, "r") as file:
+		data = json.load(file)
+	lens = get_length_list(data)
+
+	array = np.array(lens)
+	max_len = np.max(array)
+	total_len = len(lens)
+	print(max_len)
+	result_f = []
+	result_p = []
+	for i in range(max_len):
+		frequiecy = 0
+		for j in range(total_len):
+			if lens[j] == i:
+				frequiecy += 1
+		result_f.append(frequiecy)
+		result_p.append(frequiecy / total_len * 100)
+	with open("frequency_2x.json", "w") as file:
+		json.dump(result_f, file, indent=2)
+	with open("percent_2x.json", "w") as file:
+		json.dump(result_p, file, indent=2)
+
 
 if __name__ == "__main__":
 	test_method = input("Input the test method:")

@@ -27,12 +27,12 @@ def create_dataset(data, sequence_length):
 	x  = []
 	y = []
 	for i in range(len(data) - sequence_length):
-		X.append(data[i:i + sequence_length])
+		x.append(data[i:i + sequence_length])
 		y.append(data[i + sequence_length])
     
-	X = np.array(X)
+	x = np.array(x)
 	y = np.array(y)
-	return X, y
+	return x, y
 
 # create the model
 def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_function='binary_crossentropy', optimizer='adam'):
@@ -40,7 +40,6 @@ def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_functio
 	model = Sequential([
     Dense(100, input_shape=(sequence_len,), activation='relu'),
     Dense(50, activation="relu"),
-		Dense(50, activation="relu"),
 		Dense(1, activation='sigmoid')  # Output layer with sigmoid activation for binary prediction
 	])
 	# compile the model
@@ -50,7 +49,13 @@ def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_functio
 
 	# evaluate the model
 	y_pred = model.predict(X_test)
-	y_pred = int(y_pred > 0.5) 
+	y_pred = np.array(y_pred > 0.6).astype(int).flatten()
+	print(testY)
+	print(y_pred)
+	with open("testY.json", "w") as file:
+		json.dump(testY, file, indent=2)
+	with open("result1.json", "w") as file:
+		json.dump(y_pred.tolist(), file, indent=2)
 
 	# Calculate accuracy
 	accuracy = accuracy_score(y_test, y_pred)
@@ -74,7 +79,8 @@ if __name__ == "__main__":
 	inputX, outputY = create_dataset(training_data, sequence_len)
 	# split the training data to train and test set
 	X_train, X_test, y_train, y_test = train_test_split(inputX, outputY, test_size=0.2, random_state=42)
-	model = initiate_model(X_train, X_test, y_train, y_test, 'binary_crossentropy', 'adam')
+	# create the prediction model
+	model = initiate_model(X_train, y_train, X_test, y_test, epoch=20, batch_size=32, loss_function='binary_crossentropy', optimizer='adam')
 
 # # Example sequence to predict the next value
 # test_sequence = data[-sequence_len:]

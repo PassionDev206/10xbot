@@ -34,8 +34,25 @@ def create_dataset(data, sequence_length):
 	y = np.array(y)
 	return x, y
 
+# evaluate the accuracy
+def get_evaluation(actual, prediction, threshold):
+	greater_num = 0
+	correct_num = 0
+	for i in range(len(actual)):
+		if prediction[i] == 1:
+			greater_num += 1
+			if actual[i] == 1:
+				correct_num += 1
+	print(f"Correct number: {correct_num}")
+	print(f"Total prediction number: {greater_num}")
+	accuracy = correct_num / greater_num * 100
+
+	profit = (threshold - 1) * correct_num - (greater_num - correct_num)
+	print(f"Profit from {threshold} is {profit}")
+	return accuracy
+
 # create the model
-def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_function='binary_crossentropy', optimizer='adam'):
+def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_function='binary_crossentropy', optimizer='adam', threshold=1):
 	# initiate the model
 	model = Sequential([
     Dense(100, input_shape=(sequence_len,), activation='relu'),
@@ -50,16 +67,12 @@ def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_functio
 	# evaluate the model
 	y_pred = model.predict(X_test)
 	y_pred = np.array(y_pred > 0.6).astype(int).flatten()
-	print(testY)
-	print(y_pred)
-	with open("testY.json", "w") as file:
-		json.dump(testY, file, indent=2)
-	with open("result1.json", "w") as file:
-		json.dump(y_pred.tolist(), file, indent=2)
 
 	# Calculate accuracy
-	accuracy = accuracy_score(y_test, y_pred)
-	print(f'Test Accuracy: {accuracy * 100:.2f}%')
+	accuracy = get_evaluation(testY, y_pred, threshold)
+	print("Accuracy: ", accuracy)
+	# accuracy = accuracy_score(y_test, y_pred)
+	# print(f'Test Accuracy: {accuracy * 100:.2f}%')
 	return model
 
 
@@ -67,7 +80,7 @@ if __name__ == "__main__":
 	# load the crash data
 	data_path = "history100k.json"
 	# input sequence length
-	sequence_len = 20
+	sequence_len = 200
 	# input the threshold data 
 	threshold = input("Input the threshold value:")
 	threshold = float(threshold)
@@ -77,15 +90,9 @@ if __name__ == "__main__":
 	training_data = convert_binary_data(training_data, threshold)
 	# create input and output dataset
 	inputX, outputY = create_dataset(training_data, sequence_len)
+	print(inputX)
 	# split the training data to train and test set
 	X_train, X_test, y_train, y_test = train_test_split(inputX, outputY, test_size=0.2, random_state=42)
 	# create the prediction model
-	model = initiate_model(X_train, y_train, X_test, y_test, epoch=20, batch_size=32, loss_function='binary_crossentropy', optimizer='adam')
+	model = initiate_model(X_train, y_train, X_test, y_test, epoch=20, batch_size=32, loss_function='binary_crossentropy', optimizer='adam', threshold = threshold)
 
-# # Example sequence to predict the next value
-# test_sequence = data[-sequence_len:]
-
-# # Predict the next value
-# next_value = model.predict(np.reshape(test_sequence, (1, sequence_len)))
-# next_value = int(next_value > 0.5)
-# print(f'Predicted next value: {next_value[0][0]}')

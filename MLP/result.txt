@@ -1,9 +1,21 @@
+0.5
+Correct number: 5
+Total prediction number: 147
+Profit from 49.0 is 98.0
+Accuracy:  3.4013605442176873
+
+
+0.6
+
+Correct number: 4197
+Total prediction number: 8305
+Profit from 2.0 is 89.0
+Accuracy:  50.535821794099945
+
 Correct number: 6
 Total prediction number: 236
 Profit from 35.0 is -26.0
 Accuracy:  2.5423728813559325
-
-
 
 Correct number: 8
 Total prediction number: 190
@@ -20,17 +32,17 @@ Total prediction number: 181
 Profit from 49.0 is 64.0
 Accuracy:  2.7624309392265194
 
-
-
-
-
-
-
-
-
-
-
 Correct number: 5
 Total prediction number: 95
 Profit from 55.0 is 180.0
 Accuracy:  5.263157894736842
+
+
+
+
+0.7
+
+Correct number: 5
+Total prediction number: 172
+Profit from 49.0 is 73.0
+Accuracy:  2.9069767441860463

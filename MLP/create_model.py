@@ -4,7 +4,6 @@ import tensorflow as tf
 from keras.src.models import Sequential
 from keras.src.layers import Dense
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 
 # load the data from the json file
 def get_data_from_path(path):
@@ -65,14 +64,12 @@ def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_functio
 	model.fit(trainX, trainY, epochs=epoch, batch_size=batch_size, validation_data=(testX, testY))
 
 	# evaluate the model
-	y_pred = model.predict(X_test)
-	y_pred = np.array(y_pred > 0.6).astype(int).flatten()
+	y_pred = model.predict(X_train)
+	y_pred = np.array(y_pred > 0.5).astype(int).flatten()
 
 	# Calculate accuracy
 	accuracy = get_evaluation(testY, y_pred, threshold)
 	print("Accuracy: ", accuracy)
-	# accuracy = accuracy_score(y_test, y_pred)
-	# print(f'Test Accuracy: {accuracy * 100:.2f}%')
 	return model
 
 
@@ -80,7 +77,7 @@ if __name__ == "__main__":
 	# load the crash data
 	data_path = "history100k.json"
 	# input sequence length
-	sequence_len = 200
+	sequence_len = 256
 	# input the threshold data 
 	threshold = input("Input the threshold value:")
 	threshold = float(threshold)
@@ -90,9 +87,8 @@ if __name__ == "__main__":
 	training_data = convert_binary_data(training_data, threshold)
 	# create input and output dataset
 	inputX, outputY = create_dataset(training_data, sequence_len)
-	print(inputX)
 	# split the training data to train and test set
 	X_train, X_test, y_train, y_test = train_test_split(inputX, outputY, test_size=0.2, random_state=42)
 	# create the prediction model
-	model = initiate_model(X_train, y_train, X_test, y_test, epoch=20, batch_size=32, loss_function='binary_crossentropy', optimizer='adam', threshold = threshold)
+	model = initiate_model(X_train, y_train, X_test, y_test, epoch=64, batch_size=32, loss_function='binary_crossentropy', optimizer='adam', threshold = threshold)
 

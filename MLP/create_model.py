@@ -54,9 +54,9 @@ def get_evaluation(actual, prediction, threshold):
 def initiate_model(trainX, trainY, testX, testY, epoch, batch_size, loss_function='binary_crossentropy', optimizer='adam', threshold=1):
 	# initiate the model
 	model = Sequential([
-    Dense(100, input_shape=(sequence_len,), activation='relu'),
-    Dense(50, activation="relu"),
-		Dense(1, activation='sigmoid')  # Output layer with sigmoid activation for binary prediction
+		Dense(100, input_shape=(sequence_len,), activation='relu'),
+		Dense(50, activation="relu"),
+		Dense(1, activation='sigmoid') 
 	])
 	# compile the model
 	model.compile(optimizer=optimizer, loss=loss_function, metrics=['accuracy'])

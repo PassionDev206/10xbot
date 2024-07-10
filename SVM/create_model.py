@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import json
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
@@ -9,10 +10,6 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 np.random.seed(42)
 X = np.random.randn(100, 2)  # 100 samples, 2 features
 y = np.random.randint(0, 2, 100)  # Binary target variable
-
-print(X)
-
-print(y)
 
 # # Convert to DataFrame for convenience
 # df = pd.DataFrame(X, columns=['feature1', 'feature2'])
@@ -48,3 +45,24 @@ print(y)
 # # Confusion matrix
 # print('Confusion Matrix:')
 # print(confusion_matrix(y_test, y_pred))
+
+
+# load the data from json file 
+def load_data_from_path(path):
+	with open(path, "r") as file:
+		data = json.load(file)
+	return data
+
+# convert raw data to the binary data
+def convert_to_binary(data, thresold):
+	binary_data = []
+	for i in range(len(data)):
+		binary_data.append(int(data[i] >= thresold))
+	return binary_data
+
+if __name__ == "__main__":
+	data = load_data_from_path("history100k.json")
+	thresold = input("Input the threshold: ")
+	binary_data = convert_to_binary(data, float(thresold))
+
+	

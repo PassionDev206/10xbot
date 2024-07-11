@@ -4,48 +4,18 @@ import json
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# Create a synthetic dataset
-np.random.seed(42)
-X = np.random.randn(100, 2)  # 100 samples, 2 features
-y = np.random.randint(0, 2, 100)  # Binary target variable
-
-# # Convert to DataFrame for convenience
-# df = pd.DataFrame(X, columns=['feature1', 'feature2'])
-# df['target'] = y
-
-# # Separate features and target
-# X = df[['feature1', 'feature2']]
-# y = df['target']
-
-# # Split the data into training and testing sets
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# # Standardize the features
-# scaler = StandardScaler()
-# X_train = scaler.fit_transform(X_train)
-# X_test = scaler.transform(X_test)
-
-# # Train the SVM model
-# svm_model = SVC(kernel='linear')  # You can try other kernels like 'rbf', 'poly', etc.
-# svm_model.fit(X_train, y_train)
-
-# # Make predictions
-# y_pred = svm_model.predict(X_test)
-
-# # Evaluate the model
-# accuracy = accuracy_score(y_test, y_pred)
-# print(f'Accuracy: {accuracy:.2f}')
-
-# # Detailed classification report
-# print('Classification Report:')
-# print(classification_report(y_test, y_pred))
-
-# # Confusion matrix
-# print('Confusion Matrix:')
-# print(confusion_matrix(y_test, y_pred))
-
+# create the dataset (input and output) for training
+def create_dataset(data, sequence_length):
+	x  = []
+	y = []
+	for i in range(len(data) - sequence_length):
+		x.append(data[i:i + sequence_length])
+		y.append(data[i + sequence_length])
+    
+	x = np.array(x)
+	y = np.array(y)
+	return x, y
 
 # load the data from json file 
 def load_data_from_path(path):
@@ -60,9 +30,37 @@ def convert_to_binary(data, thresold):
 		binary_data.append(int(data[i] >= thresold))
 	return binary_data
 
+# evaluate the model with test result and actual values
+def evaluate_model(actual, predictions, threshold):
+	correct_num = 0
+	total_num = len(actual)
+	for i in range(total_num):
+		if predictions[i] > 0:
+			if actual[i] > 0:
+				correct_num += 1
+	accuracy = correct_num / total_num * 100
+	print(f"The accuracy in {threshold} is {accuracy:.2}%")
+	profit = correct_num * (threshold - 1) - (total_num - correct_num)
+	print(f"The profit from {threshold} is {profit:.2f}")
+
 if __name__ == "__main__":
 	data = load_data_from_path("history100k.json")
 	thresold = input("Input the threshold: ")
 	binary_data = convert_to_binary(data, float(thresold))
+	input_data, output_data = create_dataset(binary_data, 10)
+	X_train, X_test, y_train, y_test = train_test_split(input_data, output_data, test_size=0.2)
 
+	# Train the SVM model
+	svm_model = SVC(kernel='linear')
+	svm_model.fit(X_train, y_train)
+
+	# Make predictions
+	y_pred = svm_model.predict(X_test)
+	with open("result.json", "w") as file:
+		json.dump(y_pred.tolist(), file, indent=2)
+	
+	with open("actual.json", "w") as file:
+		json.dump(y_test.tolist(), file, indent=2)
+	# Evaluate the model with test result
+	evaluate_model(y_test, y_pred, float(thresold))
 	

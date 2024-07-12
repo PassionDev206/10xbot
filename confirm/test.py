@@ -83,22 +83,80 @@ def test_risk_2x():
 	with open("percent_2x.json", "w") as file:
 		json.dump(result_p, file, indent=2)
 
+# calculate the daily risk
+def get_max_length_without_2x(history, drop_range):
+	lens = []
+	tmp = 0
+	max_len = 0
+	large_lens = []
+	for i in range(3500):
+		if history[i] >= 2:
+			lens.append(tmp)
+			if tmp > drop_range:
+				large_lens.append(tmp)
+				if tmp > max_len:
+					max_len = tmp
+			tmp = 0
+		else:
+			tmp += 1
+	
+	with open("lens.json", "w") as file:
+		json.dump(lens, file, indent=2)
+	
+	large_cnt = len(large_lens)
+	total_profit = len(lens)
+	result = {
+		"Large number: ": f"{large_cnt}",
+		"Max count: ": f"{max_len}",
+		"Total profit: ": f"{total_profit}"
+	}
+	with open("result.json", "w") as file:
+		json.dump(result, file, indent=2)
+	return 0
+
+# get the daily profit
+def get_daily_profit(history, drop_range):
+	with open("data.json", "w") as file:
+		json.dump(history, file, indent=2)
+	total_bet = 0
+	total_profit = 0
+	bet_amount = 1
+	profit_amount = 0
+	profit_cnt = 0
+	loss_cnt = 0
+	for i in range(3500):
+		total_bet += bet_amount
+		if history[i] >= 2:
+			profit_amount += 2 * bet_amount
+			bet_amount = 1
+			profit_cnt += 1
+			loss_cnt = 0
+		else:
+			bet_amount = bet_amount * 2
+			loss_cnt += 1
+
+	total_profit = profit_amount - total_bet
+
+	print("Bet count: ", profit_cnt)
+	print("Total profit: ", total_profit)
+
+	return 0
+
+# test risk management in 2x strategy to minimize the loss
 def test_risk_management():
 	path = "history.json"
 	with open(path, "r") as file:
 		data = json.load(file)
-	daily_histories = []
-	for i in range(100):
-		temp = []
-		for j in range(3500):
-			temp.append(data[i * 3500 + j])
-		daily_histories.append(temp)
+	
+	day = input("Index of the day: ")
+	day = int(day) - 1
 
-	for i in range(100):
-		res_path = f"history_{i}.json"
-		with open(res_path, "w") as file:
-			json.dump(daily_histories[i], file, indent=2)
-
+	daily_history = []
+	for i in range(3500):
+		daily_history.append(data[day * 3500 + i])
+	
+	get_max_length_without_2x(daily_history, 7)
+	get_daily_profit(daily_history, 7)
 
 if __name__ == "__main__":
 	test_method = input("Input the test method:")

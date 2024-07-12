@@ -83,6 +83,22 @@ def test_risk_2x():
 	with open("percent_2x.json", "w") as file:
 		json.dump(result_p, file, indent=2)
 
+def test_risk_management():
+	path = "history.json"
+	with open(path, "r") as file:
+		data = json.load(file)
+	daily_histories = []
+	for i in range(100):
+		temp = []
+		for j in range(3500):
+			temp.append(data[i * 3500 + j])
+		daily_histories.append(temp)
+
+	for i in range(100):
+		res_path = f"history_{i}.json"
+		with open(res_path, "w") as file:
+			json.dump(daily_histories[i], file, indent=2)
+
 
 if __name__ == "__main__":
 	test_method = input("Input the test method:")
@@ -91,3 +107,6 @@ if __name__ == "__main__":
 		test_getting_profit()
 	elif test_method == 1:
 		test_risk_2x()
+	elif test_method == 2:
+		test_risk_management()
+	

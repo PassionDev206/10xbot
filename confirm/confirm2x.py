@@ -12,7 +12,7 @@ def get_max_length_without_2x(history):
 	tmp = 0
 	max_len = 0
 	large_lens = []
-	for i in range(1000000):
+	for i in range(3500):
 		if history[i] >= 2:
 			lens.append(tmp)
 			if tmp > 9:

@@ -54,37 +54,26 @@ class Gambler:
 
         return np.random.choice(self.choice_arr, p=prob_arr)
 
-
-def main(th, n_trial, data_path):
-    """
-    Run this function with a given threshold.
-    If you wish, reset the prob_density of the gambler
-    """
-    assert(th>1 and th<11)
-
-    train_data = np.loadtxt(data_path).ravel()
-    
-    prob_den, bins = compute_distribution(train_data)
-
-    gambler = Gambler(prob_den, bins)
-    
-    np.random.seed(1989) # remove if you wish
-    result_arr = []
-    for i in range(n_trial):
-        prediction = gambler.toss_coin(th)
-        # print(prediction)
-        result_arr.append(prediction)
-    result_arr = np.array(result_arr)
-    np.savetxt("real_test_V1_20000.txt", result_arr, fmt="%.0f")
-        
-
 if __name__ == "__main__":
-    T = 2   # We bet on 2X
-    N = 10000  # We will play with 10 trials. The bigger, The better!
-    data_path = "train_data.txt"
+    threshold = 3   # We bet on 2X
+    train_data_path = "train_data.txt"
+    test_data_path = "test_data.txt"
 
-    main(
-        th=T,
-        n_trial=N,
-        data_path=data_path
-    )
+    train_data = np.loadtxt(train_data_path).ravel()
+    test_data = np.loadtxt(test_data_path).ravel()
+
+    predictions = []
+
+    assert(threshold>1 and threshold<11)
+    np.random.seed(1989)
+
+    for i in range(3000):
+        if i > 0:
+            train_data = np.append(train_data, test_data[i - 1])
+        prob_den, bins = compute_distribution(train_data)
+        gambler = Gambler(prob_den, bins)
+        prediction = gambler.toss_coin(threshold)
+        predictions.append(prediction)
+    
+    predictions = np.array(predictions)
+    np.savetxt("prediction_result.txt", predictions, fmt="%.0f")

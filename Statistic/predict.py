@@ -67,7 +67,7 @@ if __name__ == "__main__":
     assert(threshold>1 and threshold<11)
     np.random.seed(1989)
 
-    for i in range(3000):
+    for i in range(30000):
         if i > 0:
             train_data = np.append(train_data, test_data[i - 1])
         prob_den, bins = compute_distribution(train_data)

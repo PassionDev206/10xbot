@@ -4,7 +4,7 @@ def analyze_result(predictions, actual):
     correct_number = 0
     wrong_number = 0
     total_upper_number = 0
-    for i in range(len(predictions)):
+    for i in range(len(predictions) - 1):
         if predictions[i] > 0:
             total_upper_number += 1
             if actual[i] >= 3:

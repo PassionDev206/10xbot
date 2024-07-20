@@ -55,7 +55,7 @@ class Gambler:
         return np.random.choice(self.choice_arr, p=prob_arr)
 
 if __name__ == "__main__":
-    threshold = 3   # We bet on 2X
+    threshold = 4   # We bet on 2X
     train_data_path = "train_data.txt"
     test_data_path = "test_data.txt"
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     assert(threshold>1 and threshold<11)
     np.random.seed(1989)
 
-    for i in range(30000):
+    for i in range(29999):
         if i > 0:
             train_data = np.append(train_data, test_data[i - 1])
         prob_den, bins = compute_distribution(train_data)
@@ -76,4 +76,4 @@ if __name__ == "__main__":
         predictions.append(prediction)
     
     predictions = np.array(predictions)
-    np.savetxt("prediction_result.txt", predictions, fmt="%.0f")
+    np.savetxt("prediction_result_2.txt", predictions, fmt="%.0f")

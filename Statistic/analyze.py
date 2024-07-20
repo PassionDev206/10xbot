@@ -7,7 +7,7 @@ def analyze_result(predictions, actual):
     for i in range(len(predictions) - 1):
         if predictions[i] > 0:
             total_upper_number += 1
-            if actual[i] >= 3:
+            if actual[i] >= 2:
                 correct_number += 1
             else:
                 wrong_number += 1
@@ -18,12 +18,12 @@ def analyze_result(predictions, actual):
     accuracy = correct_number / total_upper_number * 100
     print(f"Accuracy: {accuracy}%")
 
-    profit = correct_number * 3 - total_upper_number
+    profit = correct_number * 4 - total_upper_number
     print(f"Profit: {profit}")
 
 if __name__ == "__main__":
     # load the prediction result file
-    pred_path = "prediction_result.txt"
+    pred_path = "prediction_result_4.txt"
     predictions = np.loadtxt(pred_path).ravel()
 
     # load the actual data file

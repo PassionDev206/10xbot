@@ -76,4 +76,4 @@ if __name__ == "__main__":
         predictions.append(prediction)
     
     predictions = np.array(predictions)
-    np.savetxt("prediction_result_2.txt", predictions, fmt="%.0f")
+    np.savetxt("prediction_result_4.txt", predictions, fmt="%.0f")

@@ -7,7 +7,7 @@ def analyze_result(predictions, actual):
     for i in range(len(predictions) - 1):
         if predictions[i] > 0:
             total_upper_number += 1
-            if actual[i] >= 2:
+            if actual[i] >= 4:
                 correct_number += 1
             else:
                 wrong_number += 1
